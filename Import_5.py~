@@ -26,7 +26,9 @@ d1 = {}
 d2 = {}
 uniqueD = {}
 d3 = defaultdict(int)
-
+d4 = {}
+d5 = {}
+d6 = {}
 
 # Raw inputs
 #path_input = raw_input("path to data: ")
@@ -43,18 +45,10 @@ def file_len(fname):
 			pass
 		return i
    
-   
-def counttuples(listoftuples):
-	count = 0
-	for i in listoftuples:
-		if i !='0':
-			count += 1
-	return count
-		
 # -----  This code extracts all CDR3 aa sequences and makes a list  --------
 def main(argv):
     for name in glob.glob(argv[1]+'/*.txt'):
-        d2[name[:]] = file_len(name)
+        d5[name[:]] = file_len(name)
         fileID.append(name[:])
         with open(name, 'rb') as files:
             reader = csv.reader(files, delimiter = '\t')
@@ -74,15 +68,15 @@ def main(argv):
 # ---- This code will parse all .cls the files in a directory 
 # ---- and return a default nested dictionary {filename: {AA : count}}
 # --- Since there are multiple nt seq for one aa seq I used a defaultdict(int)
-    for i in range(len(fileID)):                                 
+    for i in range(len(fileID)):
 	    for name in glob.glob(argv[1]+'/*.txt'):
-		    d1[name[(len(argv[1])):-4]] = defaultdict(int)
+		    d1[name[(len(argv[1])+1):-4]] = defaultdict(int)
 		    with open(name, 'rb') as files:
 			    row = files.next()
 		            for row in files:
 			        row = row.strip().split('\t')
 			        k, v = row[4], row[0]
-			        d1[name[(len(argv[1])):-4]][k] += int(v)
+			        d1[name[(len(argv[1])+1):-4]][k] += int(v)
 			    
 
 # --- To compare unique sequence list to dictionary of patients
@@ -101,31 +95,17 @@ def main(argv):
 # --- This will write the file
     header = []  #I define the header within a tuple to maintain the order
     matrix = []  # this list allows me to troubleshoot
-    with open(argv[2]+'CDR3aaFrequency_TCRb.csv', 'w') as output:
+
+    with open(argv[2]+'CDR3aaFrequency_TCRb.txt', 'w') as output:
         header.append(str('CDR3'))
         for i1 in sorted(uniqueD.items()[0][1][:], key = lambda x: x):
     	    header.append(i1[0])
-    	header.append('Zrec')
-        output.write(','.join(header) + '\n')
+        output.write('\t'.join(header) + '\n')
         for k, v in uniqueD.iteritems():
     	    matrix.append((k, [x[1] for x in v]))
+    	    sdata = ((k, sorted(v, key = lambda x: x[0])))
+    	    output.write('%s\t%s\n' % (sdata[0], '\t'.join(x[1] for x in sdata[1])))
     	    
-            sdata1 = k
-            sdata2 = [x[1] for x in sorted(v, key = lambda x: x[0])]
-            sdata3 = int((counttuples([x[1] for x in v])))
-    	    sdata = (sdata1, sdata2, sdata3)
-
-            output.write(str(k) + ',' + 
-    	    ','.join(i for i in sdata2) + ',' +
-    	    (str(sdata3)) +
-    	    '\n')
-
-    	    #output.write((str(sdata[0]) + '\t'.join(([x[1] for x in sdata[1]])) + '\t'.join(str(sdata[2])))+ '\n')
-    	    #output.write('%s\t%s\n' % (sdata[0], '\t'.join(x[1] for x in sdata[1]) + '\t'.join(sdata[2])))
-    	    
-    	    
-# print [x[1] for x in uniqueD.values()[0]]
-
 if (__name__ == "__main__"):
 	status = main(sys.argv)
 	sys.exit(status)
