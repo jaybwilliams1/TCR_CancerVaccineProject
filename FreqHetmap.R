@@ -28,7 +28,7 @@ sdata <- data[order(data["Zrec"], decreasing=TRUE), ]       #sorts matrix based 
 
 cdata <- data.matrix(sdata[,2:ncol(data)])  # transform column 2-5 into a matrix	
 
-mat_data <- cdata[1:args[2], 1:args[3]]
+mat_data <- cdata[1:args[2], args[3]:args[4]]
 
 
 #########################################################

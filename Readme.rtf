@@ -1,0 +1,44 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 ReadMe\
+\
+This repository includes (will include completely at a later date) the source code in python to extract TCR data from data exported from MiTCR viewer. I have then started to create an R program to display the frequency of CDR3 sequences as a heatmap for each patient. The R program will sort in descending order of sequences found in the most number of patients (or samples). The pipeline is as follows:\
+\
+1) In command line type:\
+\
+$ python Import_5.py 
+\b PATH(1)
+\b0  
+\b PATH(2)
+\b0 \
+\
+where:  \
+PATH(1) = Path to data containing MiTCR exported data files. These are tab delimited text files and this folder must not include any other text file that is not from MiTCR viewer. \
+\
+PATH(2) = location to where you want the file to be exported. I usually just go up one directly \'93../\'93\
+\
+This will generate a file containing a unique list of CDR3 sequences in the first column followed by how many times each sequence was recovered in each patient (MiTCR exported file). The last column contains how many different patients contained a given sequence. This file is titled: CDR3aaFrequency_TCRb.csv\
+\
+Next run the R program.\
+\
+2) In command line type:\
+\
+Rscript FreqHeatmap.R 
+\b PATH(2)
+\b0  
+\b #rows
+\b0  
+\b StartCol
+\b0  
+\b EndCol
+\b0 \
+\
+PATH(2) = path to CDR3aaFrequency_TCRb.csv\
+\
+#rows is how many rows to be analyzed. I put this in b/c the heat map will not be generated when there are too many rows.\
+\
+StartCol:EndCol allows the user to specify which block of columns to be analyzed. }
